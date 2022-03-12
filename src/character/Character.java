@@ -51,6 +51,15 @@ public abstract class Character extends ImageView {
     public int getHP(){
         return hitPoints;
     }
+    public void resetHP(){
+        hitPoints = START_HP;
+    }
+    public void antiHP(){
+        hitPoints = Math.max(10, hitPoints-10);
+    }
+    public void witchHP(){
+        hitPoints = 10;
+    }
     public int getLives(){
         return lives;
     }

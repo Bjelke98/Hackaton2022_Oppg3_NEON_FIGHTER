@@ -23,7 +23,7 @@ public class HitPoints extends Label {
     public HitPoints(int player){
         this.player = player;
         if(player==1 || player==2){
-            this.playerText = "Player "+player+": ";
+            this.playerText = "Player "+player+" HP: ";
         } else {
             this.playerText = "Time: ";
         }

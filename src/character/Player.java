@@ -5,7 +5,6 @@ import abilities.Shoot;
 import abilities.Swing;
 import cell.Cell;
 import cell.Point;
-import game.GameController;
 import game.Settings;
 import input.InputController;
 import javafx.animation.Animation;
@@ -13,13 +12,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import map.Map;
 import miscs.EntityOptions;
+import powerup.PowerUp;
 
 /**
  * Hovedklasse for spillere.
@@ -31,7 +29,8 @@ public abstract class Player extends Character{
     private static final double DIAGONAL_MOVEMENT_SPEED = Settings.MOVEMENT_SPEED* DIAGONAL_FACTOR;
 
     public static final int START_LIVES = 3;
-    private static final Duration ABILITY_COOLDOWN = Duration.millis(1000);
+    private static final Duration ABILITY_INTERVAL = Duration.millis(750);
+    private static final Duration DASH_INTERVAL = Duration.millis(1000);
 
     private final Timeline COOLDOWN;
     private final Timeline DASH_COOLDOWN;
@@ -73,9 +72,9 @@ public abstract class Player extends Character{
         super(image, map, point);
         lives = START_LIVES;
 
-        COOLDOWN = new Timeline(new KeyFrame(ABILITY_COOLDOWN, handleCooldown));
+        COOLDOWN = new Timeline(new KeyFrame(ABILITY_INTERVAL, handleCooldown));
         COOLDOWN.setCycleCount(1);
-        DASH_COOLDOWN = new Timeline(new KeyFrame(ABILITY_COOLDOWN, handleAbilityCooldown));
+        DASH_COOLDOWN = new Timeline(new KeyFrame(DASH_INTERVAL, handleAbilityCooldown));
         DASH_COOLDOWN.setCycleCount(1);
         SWING = new Swing(this);
         SHOOT = new Shoot(this);
@@ -243,6 +242,21 @@ public abstract class Player extends Character{
                 }
             }
 
+        }
+
+        PowerUp toRemove = null;
+        for (PowerUp p : map.activePowerups){
+            double smallX = p.getX()+Settings.CELL_SIZE/2-Settings.BASE_CELL;
+            double smallY = p.getY()+Settings.CELL_SIZE/2-Settings.BASE_CELL;
+            double size = Settings.BASE_CELL*2;
+            if(getLayoutBounds().intersects(smallX, smallY, size, size)){
+                p.effect(this);
+                toRemove = p;
+            }
+        }
+        if(toRemove!=null){
+            map.getChildren().remove(toRemove);
+            map.activePowerups.remove(toRemove);
         }
 
         setX(getX()+deltaX);

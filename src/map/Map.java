@@ -18,11 +18,16 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import miscs.Sizeable;
+import powerup.AntiHeal;
+import powerup.Heal;
+import powerup.PowerUp;
+import powerup.Witch;
 import score.PlayerStatus;
 import score.Score;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -51,12 +56,38 @@ public class Map extends Pane implements Sizeable {
 
     private int time = START_TIME;
     private static final Duration TIME_INTERVAL = Duration.millis(250);
+    private static final Duration POWERUP_INTERVAL = Duration.millis(9000);
 
     private Timeline TIME;
 
     EventHandler<ActionEvent> handleTime = e-> {
         time--;
         playerStatus.updateHP(3, time);
+    };
+
+    public ArrayList<PowerUp> activePowerups = new ArrayList<>();
+
+    private Timeline POWERUP;
+
+    EventHandler<ActionEvent> handlePowerUp = e-> {
+        int randX = (int)(Math.random()*cellCountWidth);
+        int randY = (int)(Math.random()*cellCountHeight);
+        int randType = (int)(Math.random()*PowerUp.countTypes);
+        Point p = new Point(randX, randY);
+        Cell cell = cells.get(p);
+        if(!cell.isCollidable()){
+            PowerUp pu;
+            switch (randType){
+                case 0 -> pu = new Heal(p);
+                case 1 -> pu = new AntiHeal(p);
+                case 2 -> pu = new Witch(p);
+                default -> pu = null;
+            }
+            if(pu!=null){
+                activePowerups.add(pu);
+                getChildren().add(pu);
+            }
+        }
     };
 
     public Map(){
@@ -72,6 +103,7 @@ public class Map extends Pane implements Sizeable {
         TIME.stop();
         playerOne.stop();
         playerTwo.stop();
+        POWERUP.stop();
         int finalScore = ((p.getHP()+(p.getLives()-1)*Character.START_HP*time)/100);
         GameController.score.leaderBoardEntry(winner, finalScore);
         getChildren().add(new WinScreen(this, winner, finalScore));
@@ -131,6 +163,9 @@ public class Map extends Pane implements Sizeable {
         TIME = new Timeline(new KeyFrame(TIME_INTERVAL, handleTime));
         TIME.setCycleCount(START_TIME);
         TIME.play();
+        POWERUP = new Timeline(new KeyFrame(POWERUP_INTERVAL, handlePowerUp));
+        POWERUP.setCycleCount(Timeline.INDEFINITE);
+        POWERUP.play();
     }
     public void restart(boolean full, WinScreen ws){
         getChildren().remove(playerOne);
@@ -141,6 +176,10 @@ public class Map extends Pane implements Sizeable {
         Ability.ABILITY_LIST.clear();
         getChildren().remove(playerStatus);
         getChildren().remove(ws);
+        for (PowerUp p : activePowerups) {
+            getChildren().remove(p);
+        }
+        activePowerups.clear();
         restart();
     }
 
