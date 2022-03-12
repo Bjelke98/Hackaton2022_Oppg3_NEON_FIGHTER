@@ -21,12 +21,14 @@ public class Score extends VBox implements Sizeable {
     private ScoreBoard scoreBoard = new ScoreBoard();
     private LeaderBoard leaderBoard = new LeaderBoard();
 
-
-
     public Score(){
         setPrefWidth(getPaneWidth());
         setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
         getChildren().addAll(scoreBoard, leaderBoard);
+    }
+
+    public void leaderBoardEntry(int player, int score){
+        leaderBoard.addScore("Player "+player, score);
     }
 
     @Override

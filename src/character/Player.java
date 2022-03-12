@@ -4,6 +4,7 @@ import abilities.Dash;
 import abilities.Swing;
 import cell.Cell;
 import cell.Point;
+import game.GameController;
 import game.Settings;
 import input.InputController;
 import javafx.animation.Animation;
@@ -23,6 +24,7 @@ public abstract class Player extends Character{
     private static final double DIAGONAL_FACTOR = 0.7;
     private static final double DIAGONAL_MOVEMENT_SPEED = Settings.MOVEMENT_SPEED* DIAGONAL_FACTOR;
 
+    public static final int START_LIVES = 3;
     private static final Duration ABILITY_COOLDOWN = Duration.millis(1000);
 
     private Timeline COOLDOWN;
@@ -31,6 +33,8 @@ public abstract class Player extends Character{
     private Dash DASH;
 
     public int playerNumber;
+
+    private Point startPoint;
 
 
     protected KeyCode[] keyBindings = {
@@ -57,8 +61,8 @@ public abstract class Player extends Character{
 
     protected Player(Image image, Map map, Point point) {
         super(image, map, point);
-
-        lives = 3;
+        startPoint = point;
+        lives = START_LIVES;
 
         COOLDOWN = new Timeline(new KeyFrame(ABILITY_COOLDOWN, handleCooldown));
         COOLDOWN.setCycleCount(1);
@@ -69,8 +73,11 @@ public abstract class Player extends Character{
         //map.getChildren().add(map.getChildren().size()-1, SWING);
     }
 
-    public int getHP(){
-        return hitPoints;
+    @Override
+    public void stop(){
+        COOLDOWN.stop();
+        DASH_COOLDOWN.stop();
+        super.stop();
     }
 
     public void swingHit(){
@@ -83,6 +90,7 @@ public abstract class Player extends Character{
         if(hitPoints<=0){
             hitPoints=0;
             lives--;
+            Map.playerStatus.updateLife(playerNumber, lives);
             hitPoints = START_HP;
         }
         if(lives<1){

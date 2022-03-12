@@ -20,14 +20,20 @@ public class LeaderBoard extends VBox {
         update();
     }
 
+    public void addScore(String name, int score){
+        scores.add(new ScoreContainer(name, score));
+        serialize();
+        update();
+    }
+
     private void update(){
         getChildren().clear();
-        getChildren().addAll(new Label("HighScores:"), new Label());
+        getChildren().addAll(new LeaderBoardLabel("HighScores:"), new Label());
         if(scores!=null){
             Collections.sort(scores);
             int displayAmount = Math.min(scores.size(), 7);
             for (int i = 0; i < displayAmount; i++) {
-                getChildren().add(new Label(scores.get(i).toString()));
+                getChildren().add(new LeaderBoardLabel(scores.get(i).toString()));
             }
         }
     }

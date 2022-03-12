@@ -2,9 +2,11 @@ package map;
 
 import abilities.Ability;
 import cell.Wall;
+import character.Character;
 import character.Player;
 import character.PlayerOne;
 import character.PlayerTwo;
+import game.GameController;
 import game.Settings;
 import cell.Cell;
 import cell.Floor;
@@ -36,6 +38,9 @@ public class Map extends Pane implements Sizeable {
     public Player playerOne;
     public Player playerTwo;
 
+    Point p1Start;
+    Point p2Start;
+
     public static PlayerStatus playerStatus;
 
     public static final int START_TIME = 1000;
@@ -54,25 +59,18 @@ public class Map extends Pane implements Sizeable {
         loadMap();
         setPrefWidth(getPaneWidth());
         setPrefHeight(getPaneHeight());
-        playerStatus = new PlayerStatus(2, getPaneWidth());
-        playerOne = new PlayerOne(this, new Point(3, 3));
-        playerTwo = new PlayerTwo(this, new Point(10, 10));
-        getChildren().addAll(playerOne, playerTwo);
-        for(Ability b : Ability.ABILITY_LIST){
-            getChildren().add(b);
-            b.setEnemy(b.getPlayer().playerNumber==2 ? playerOne : playerTwo);
-        }
-        getChildren().add(playerStatus);
-        playerStatus.updateHP(1, playerOne.getHP());
-        playerStatus.updateHP(2, playerTwo.getHP());
-        playerStatus.updateHP(3, START_TIME);
-        TIME = new Timeline(new KeyFrame(TIME_INTERVAL, handleTime));
-        TIME.setCycleCount(START_TIME);
-        TIME.play();
+        restart();
     }
 
     public void endGame(int loser){
-
+        int winner = (loser==1 ? 2 : 1);
+        Player p = (winner==1 ? playerOne : playerTwo);
+        TIME.stop();
+        playerOne.stop();
+        playerTwo.stop();
+        int finalScore = ((p.getHP()+(p.getLives()-1)*Character.START_HP*time)/100);
+        GameController.score.leaderBoardEntry(winner, finalScore);
+        getChildren().add(new WinScreen(this, winner, finalScore));
     }
 
     private void loadMap(){
@@ -97,10 +95,16 @@ public class Map extends Pane implements Sizeable {
     private void putCell(int x, int y, int n){
         Point p = new Point(x, y);
         Cell c = switch (n){
-            case 0 -> new Floor(p);
+            case 0,2,3 -> new Floor(p);
             case 1 -> new Wall(p);
             default -> throw new IllegalStateException("Illegal cell type: " + n);
         };
+        if(n==2){
+            p1Start=p;
+        }
+        if(n==3){
+            p2Start=p;
+        }
         if (c.isCollidable())walls.add(c);
         cells.put(p, c);
         getChildren().add(c);
@@ -111,6 +115,36 @@ public class Map extends Pane implements Sizeable {
     }
     public int getCellCountHeight() {
         return cellCountHeight;
+    }
+
+    public void restart(){
+        playerStatus = new PlayerStatus(2, getPaneWidth());
+        playerOne = new PlayerOne(this, p1Start);
+        playerTwo = new PlayerTwo(this, p2Start);
+        getChildren().addAll(playerOne, playerTwo);
+        for(Ability b : Ability.ABILITY_LIST){
+            getChildren().add(b);
+            b.setEnemy(b.getPlayer().playerNumber==2 ? playerOne : playerTwo);
+        }
+        getChildren().add(playerStatus);
+        playerStatus.updateHP(1, playerOne.getHP());
+        playerStatus.updateHP(2, playerTwo.getHP());
+        playerStatus.updateHP(3, START_TIME);
+        time = START_TIME;
+        TIME = new Timeline(new KeyFrame(TIME_INTERVAL, handleTime));
+        TIME.setCycleCount(START_TIME);
+        TIME.play();
+    }
+    public void restart(boolean full, WinScreen ws){
+        getChildren().remove(playerOne);
+        getChildren().remove(playerTwo);
+        for (Ability b : Ability.ABILITY_LIST){
+            getChildren().remove(b);
+        }
+        Ability.ABILITY_LIST.clear();
+        getChildren().remove(playerStatus);
+        getChildren().remove(ws);
+        restart();
     }
 
     @Override

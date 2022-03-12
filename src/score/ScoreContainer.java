@@ -1,6 +1,8 @@
 package score;
 
-public record ScoreContainer(String playerName, int score) implements Comparable<ScoreContainer> {
+import java.io.Serializable;
+
+public record ScoreContainer(String playerName, int score) implements Comparable<ScoreContainer>, Serializable {
 
     @Override
     public int compareTo(ScoreContainer o) {

@@ -16,7 +16,7 @@ public abstract class Character extends ImageView {
 
     private static final Duration MOVEMENT_INTERVAL = Duration.millis(20*Settings.SPEED_MULTIPLIER);
 
-    protected static final int START_HP = 100;
+    public static final int START_HP = 100;
 
     private final Timeline MOVEMENT;
 
@@ -39,6 +39,16 @@ public abstract class Character extends ImageView {
         MOVEMENT = new Timeline(new KeyFrame(MOVEMENT_INTERVAL, handleMovement));
         MOVEMENT.setCycleCount(Timeline.INDEFINITE);
         MOVEMENT.play();
+    }
+
+    public int getHP(){
+        return hitPoints;
+    }
+    public int getLives(){
+        return lives;
+    }
+    public void stop(){
+        MOVEMENT.stop();
     }
 
     protected abstract void update();
