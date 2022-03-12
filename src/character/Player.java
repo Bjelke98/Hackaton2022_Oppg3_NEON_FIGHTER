@@ -1,6 +1,7 @@
 package character;
 
 import abilities.Dash;
+import abilities.Shoot;
 import abilities.Swing;
 import cell.Cell;
 import cell.Point;
@@ -15,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import map.Map;
 import miscs.EntityOptions;
@@ -34,9 +36,13 @@ public abstract class Player extends Character{
     private final Timeline COOLDOWN;
     private final Timeline DASH_COOLDOWN;
     private Swing SWING;
+    private Shoot SHOOT;
     private final Dash DASH;
 
     public int playerNumber;
+
+    // Hitbox visualisering
+    //Rectangle r = new Rectangle();
 
 
     protected KeyCode[] keyBindings = {
@@ -49,11 +55,13 @@ public abstract class Player extends Character{
             KeyCode.DIGIT3,
             KeyCode.DIGIT4,
             KeyCode.DIGIT5,
-            KeyCode.DIGIT6
+            KeyCode.DIGIT6,
+            KeyCode.DIGIT7
     };
 
     EventHandler<ActionEvent> handleCooldown = e-> {
         SWING.reset();
+        SHOOT.reset();
     };
 
     EventHandler<ActionEvent> handleAbilityCooldown = e-> {
@@ -70,7 +78,11 @@ public abstract class Player extends Character{
         DASH_COOLDOWN = new Timeline(new KeyFrame(ABILITY_COOLDOWN, handleAbilityCooldown));
         DASH_COOLDOWN.setCycleCount(1);
         SWING = new Swing(this);
+        SHOOT = new Shoot(this);
         DASH = new Dash(this);
+
+        // Visualiser hitbox
+        //map.getChildren().add(r);
     }
 
     @Override
@@ -85,11 +97,21 @@ public abstract class Player extends Character{
         checkHP();
         Map.playerStatus.updateHP(playerNumber, hitPoints);
     }
+    public void shootHit(){
+        hitPoints-=Settings.SWING_DAMAGE/2;
+        checkHP();
+        Map.playerStatus.updateHP(playerNumber, hitPoints);
+    }
 
     public void checkHP(){
         if(hitPoints<=0){
             hitPoints=0;
             lives--;
+            setX(START_POINT.sx());
+            setY(START_POINT.sy());
+            Player enemy = SWING.getEnemy();
+            enemy.setX(enemy.START_POINT.sx());
+            enemy.setY(enemy.START_POINT.sy());
             Map.playerStatus.updateLife(playerNumber, lives);
             hitPoints = START_HP;
         }
@@ -137,17 +159,23 @@ public abstract class Player extends Character{
     private void attack(int side){
         if(side!=0){
             if(COOLDOWN.getStatus() == Animation.Status.STOPPED){
-                SWING.play(side);
+                if(side>10){
+                    SHOOT.play(side);
+                } else {
+                    SWING.play(side);
+                }
                 COOLDOWN.play();
             }
         }
     }
 
     private int getAttack(){
-        if(InputController.isPressed(keyBindings[4]))return 1;
-        if(InputController.isPressed(keyBindings[5]))return 2;
-        if(InputController.isPressed(keyBindings[6]))return 3;
-        if(InputController.isPressed(keyBindings[7]))return 4;
+        int shootOffset = 0;
+        if(InputController.isPressed(keyBindings[10]))shootOffset = 10;
+        if(InputController.isPressed(keyBindings[4]))return 1+shootOffset;
+        if(InputController.isPressed(keyBindings[5]))return 2+shootOffset;
+        if(InputController.isPressed(keyBindings[6]))return 3+shootOffset;
+        if(InputController.isPressed(keyBindings[7]))return 4+shootOffset;
         return 0;
     }
 
@@ -183,7 +211,23 @@ public abstract class Player extends Character{
         }
 
         for (Cell c : map.walls){
-            boolean isColliding = c.getLayoutBounds().intersects(getLayoutBounds());
+            double slimOffsetX = 0;
+            double slimOffsetY = 0;
+            switch (direction){
+                case 1,2 -> slimOffsetX = Settings.BASE_CELL;
+                case 3,4 -> slimOffsetY = Settings.BASE_CELL;
+            }
+            boolean isColliding = c.getLayoutBounds().intersects(getX()+slimOffsetX,
+                                                                 getY()+slimOffsetY,
+                                                                 Settings.CHARACTER_SIZE-slimOffsetX*2,
+                                                                 Settings.CHARACTER_SIZE-slimOffsetY*2);
+
+            // Visualiser hitbox
+//            r.setX(getX()+slimOffsetX);
+//            r.setY(getY()+slimOffsetY);
+//            r.setWidth(Settings.CHARACTER_SIZE-slimOffsetX*2);
+//            r.setHeight(Settings.CHARACTER_SIZE-slimOffsetY*2);
+
             if(isColliding){
                 if(deltaX!=0){
                     if ((deltaX<0 && c.getX()<getX()) || (deltaX>0 && c.getX()>getX()) ){ // X

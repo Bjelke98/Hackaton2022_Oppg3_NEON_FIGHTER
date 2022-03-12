@@ -27,6 +27,7 @@ public abstract class Ability extends ImageView {
     protected Player enemy;
     protected int animationState = 0;
     protected int animationDirection = 0;
+    protected boolean isHit = false;
 
     EventHandler<ActionEvent> handleAnimation = e-> spriteUpdate();
 
@@ -45,10 +46,10 @@ public abstract class Ability extends ImageView {
             setViewport(EntityOptions.VIEWS[animationState/2]);
             if(animationDirection!=0){
                 setRotate(switch (animationDirection){
-                    case 1 -> 0;
-                    case 4 -> 90;
-                    case 2 -> 180;
-                    case 3 -> 270;
+                    case 1, 11 -> 0;
+                    case 4, 14 -> 90;
+                    case 2, 12 -> 180;
+                    case 3, 13 -> 270;
                     default -> throw new IllegalStateException("Unexpected value: " + animationDirection);
                 });
             }
@@ -70,6 +71,7 @@ public abstract class Ability extends ImageView {
     public void reset(){
         animationState = 0;
         animationDirection = 0;
+        isHit = false;
         setX(-Settings.CHARACTER_SIZE);
     }
 
@@ -82,11 +84,20 @@ public abstract class Ability extends ImageView {
         this.enemy = enemy;
     }
 
+    public Player getEnemy() {
+        return enemy;
+    }
+
     public Player getPlayer() {
         return player;
     }
 
     public Animation.Status getStatus(){
         return ANIMATION.getStatus();
+    }
+
+    @Override
+    public String toString() {
+        return getX()+" "+getY();
     }
 }

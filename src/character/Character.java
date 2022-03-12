@@ -28,6 +28,8 @@ public abstract class Character extends ImageView {
 
     protected int hitPoints = START_HP;
 
+    protected final Point START_POINT;
+
     protected int lives = 1;
 
     EventHandler<ActionEvent> handleMovement = e-> update();
@@ -35,6 +37,7 @@ public abstract class Character extends ImageView {
     protected Character(Image image, Map map, Point point){
         super(image);
         this.map = map;
+        this.START_POINT = point;
         setX(point.sx());
         setY(point.sy());
         setFitWidth(Settings.CHARACTER_SIZE);

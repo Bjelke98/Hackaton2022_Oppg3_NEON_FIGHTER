@@ -15,9 +15,11 @@ public class WinText extends Label {
     protected static final FontWeight fw = FontWeight.EXTRA_BOLD;
     private static final Font FONT = Font.font(ff, fw, fs);
     public WinText(String text){
+        super(text);
         setFont(FONT);
     }
     public WinText(String text, int winner){
+        this(text);
         setTextFill(winner==1 ? Color.CYAN : Color.LIMEGREEN);
     }
 }

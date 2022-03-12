@@ -78,6 +78,14 @@
             <trigger index="1">
                 <deadZone>6000</deadZone>
                 <throttle>positivehalf</throttle>
+                <triggerbutton index="2">
+                    <slots>
+                        <slot>
+                            <code>0x4d</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                    </slots>
+                </triggerbutton>
             </trigger>
             <trigger index="2">
                 <deadZone>6000</deadZone>
