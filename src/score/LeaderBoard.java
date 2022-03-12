@@ -1,5 +1,7 @@
 package score;
 
+import game.Settings;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -15,6 +17,7 @@ public class LeaderBoard extends VBox {
     private ArrayList<ScoreContainer> scores;
 
     public LeaderBoard(){
+        setPadding(new Insets(Settings.BASE_CELL));
         if(!SCORE_FILE.exists()){
             scores = new ArrayList<>();
             serialize();

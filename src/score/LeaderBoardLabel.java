@@ -7,7 +7,7 @@ import javafx.scene.text.FontWeight;
 
 public class LeaderBoardLabel extends Label {
     private static final String ff = "Arial";
-    private static final double fs = 4* Settings.BASE_SCALE;
+    private static final double fs = 6* Settings.BASE_SCALE;
     private static final FontWeight fw = FontWeight.BOLD;
     private static final Font FONT = Font.font(ff, fw, fs);
     public LeaderBoardLabel(){
