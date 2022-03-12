@@ -4,6 +4,10 @@ import character.Player;
 import game.Settings;
 import javafx.scene.image.Image;
 
+/**
+ * Har ansvar for å svinge sverd forran spiller.
+ * Rotering av bildet skjer i super klasse.
+ */
 public class Swing extends Ability{
 
     private static final Image IMAGE = new Image("Swing2.png");

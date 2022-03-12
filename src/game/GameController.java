@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 import map.Map;
 import score.Score;
 
+/**
+ * Hovedklasse for spillet som inneholder hele applikasjonen. Siden spillet bare bruker en scene så fungerer den mer som en samleplass.
+ */
 public class GameController extends Application {
     public static Score score;
     @Override
@@ -27,7 +30,7 @@ public class GameController extends Application {
         scene.setOnKeyReleased(e->InputController.release(e.getCode()));
 
         stage.setScene(scene);
-        stage.setTitle("Hackaton oppgave 3");
+        stage.setTitle("Hackathon oppgave 3");
         stage.show();
     }
 

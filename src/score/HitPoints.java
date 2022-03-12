@@ -6,6 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+/**
+ * Litt unødven dig klasse, men gjør det lettere å holde styr på tekst innholdet i topp panelet.
+ */
 public class HitPoints extends Label {
 
     private static final String ff = "Arial";
@@ -15,14 +18,14 @@ public class HitPoints extends Label {
 
     private static final Font FONT = Font.font(ff, fw, fs);
 
-    private String playerTekst;
+    private final String playerText;
     private int player;
     public HitPoints(int player){
         this.player = player;
         if(player==1 || player==2){
-            this.playerTekst = "Player "+player+": ";
+            this.playerText = "Player "+player+": ";
         } else {
-            this.playerTekst = "Time: ";
+            this.playerText = "Time: ";
         }
         setFont(FONT);
         setTextFill(switch (player){
@@ -33,6 +36,6 @@ public class HitPoints extends Label {
     }
 
     public void update(int hp){
-        setText(playerTekst+hp);
+        setText(playerText +hp);
     }
 }

@@ -7,20 +7,22 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import miscs.EntityOptions;
 
 import java.util.ArrayList;
 
+/**
+ * Super klasse for alle evner spilleren har.
+ */
 public abstract class Ability extends ImageView {
 
     public static final ArrayList<Ability> ABILITY_LIST = new ArrayList<>();
 
     private static final Duration ANIMATION_DURATION = Duration.millis(20);
 
-    private Timeline ANIMATION;
+    private final Timeline ANIMATION;
     protected Player player;
     protected Player enemy;
     protected int animationState = 0;
@@ -61,6 +63,7 @@ public abstract class Ability extends ImageView {
         }
     }
 
+    // Overskriv i subklasser for å lage egendefinerte egenskaper
     protected abstract void update();
     protected abstract void lastTick();
 

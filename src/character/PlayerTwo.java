@@ -5,6 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import map.Map;
 
+/**
+ * Overskriver keyBindings arrayet.
+ */
 public class PlayerTwo extends Player{
     public static final Image IMAGE = new Image("Player2_3.png");
     public PlayerTwo(Map map, Point point) {

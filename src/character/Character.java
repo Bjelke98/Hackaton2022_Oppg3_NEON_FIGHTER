@@ -12,6 +12,10 @@ import javafx.util.Duration;
 import map.Map;
 import miscs.EntityOptions;
 
+
+/**
+ * Super klasse for alle karakterer. Det var planlagt ikke vennlige programmstyrte fiender.
+ */
 public abstract class Character extends ImageView {
 
     private static final Duration MOVEMENT_INTERVAL = Duration.millis(20*Settings.SPEED_MULTIPLIER);

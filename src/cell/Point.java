@@ -4,6 +4,11 @@ import game.Settings;
 
 import java.util.Objects;
 
+/**
+ * Egendefinert point klasse / record for å kunne holde styr på celler.
+ * Hadde tenkt å bruke utvidet funksjonalitet til å generere kart, men det er ikke tid nok.
+ * Nå er den bare hovedsaklig nøkkel i cellene sitt hashmap.
+ */
 public record Point(int x, int y) {
 
     public double sx(){

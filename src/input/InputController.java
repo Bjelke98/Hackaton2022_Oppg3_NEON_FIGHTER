@@ -4,6 +4,10 @@ import javafx.scene.input.KeyCode;
 
 import java.util.HashMap;
 
+/**
+ * Holder kontroll på alle inputs.
+ * Et enkelt hashmap som har oversikt over om en nøkkel blir holdt nede eller ikke.
+ */
 public class InputController {
     private static final HashMap<KeyCode, Boolean> INPUT = new HashMap<>();
     public static boolean isPressed(KeyCode k){

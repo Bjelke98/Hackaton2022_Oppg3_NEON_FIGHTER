@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+/**
+ * Kart klassen, muligens den klassen som har flest arbeidsoppgaver.
+ * Skulle vel helst hatt delt den litt opp, men tiden lar seg ikke gjøre.
+ */
 public class Map extends Pane implements Sizeable {
     private static final File MAP1 = new File("map1.csv");
     private static final File MAP2 = new File("map2.csv");
@@ -108,13 +112,6 @@ public class Map extends Pane implements Sizeable {
         if (c.isCollidable())walls.add(c);
         cells.put(p, c);
         getChildren().add(c);
-    }
-
-    public int getCellCountWidth() {
-        return cellCountWidth;
-    }
-    public int getCellCountHeight() {
-        return cellCountHeight;
     }
 
     public void restart(){

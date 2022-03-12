@@ -1,5 +1,8 @@
 package game;
 
+/**
+ * Konfigurasjons fil hvor en kan endre skaleringer, hastigheter og lignende.
+ */
 public class Settings {
     public static final double BASE_SCALE = 5;
     public static final double BASE_CELL = 8; // 8 piksler celler

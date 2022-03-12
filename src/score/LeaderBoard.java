@@ -7,6 +7,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Klasse for å vise frem, legge til og lagre scores
+ */
 public class LeaderBoard extends VBox {
     private static final File SCORE_FILE = new File("scores.ser");
     private ArrayList<ScoreContainer> scores;

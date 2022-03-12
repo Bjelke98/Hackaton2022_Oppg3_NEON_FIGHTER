@@ -1,12 +1,12 @@
 package score;
 
 import character.Player;
-import character.PlayerOne;
-import character.PlayerTwo;
 import game.Settings;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+/**
+ * Viser hvor mange liv spilleren har gjenstående.
+ */
 public class LifePane extends HBox {
     int player;
     public LifePane(int player){

@@ -19,6 +19,10 @@ import javafx.util.Duration;
 import map.Map;
 import miscs.EntityOptions;
 
+/**
+ * Hovedklasse for spillere.
+ * Inneholder kollisjon, bevegelse, animasjoner, med mer...
+ */
 public abstract class Player extends Character{
 
     private static final double DIAGONAL_FACTOR = 0.7;
@@ -27,14 +31,12 @@ public abstract class Player extends Character{
     public static final int START_LIVES = 3;
     private static final Duration ABILITY_COOLDOWN = Duration.millis(1000);
 
-    private Timeline COOLDOWN;
-    private Timeline DASH_COOLDOWN;
+    private final Timeline COOLDOWN;
+    private final Timeline DASH_COOLDOWN;
     private Swing SWING;
-    private Dash DASH;
+    private final Dash DASH;
 
     public int playerNumber;
-
-    private Point startPoint;
 
 
     protected KeyCode[] keyBindings = {
@@ -55,13 +57,12 @@ public abstract class Player extends Character{
     };
 
     EventHandler<ActionEvent> handleAbilityCooldown = e-> {
-
+        // If extra action is needed
     };
 
 
     protected Player(Image image, Map map, Point point) {
         super(image, map, point);
-        startPoint = point;
         lives = START_LIVES;
 
         COOLDOWN = new Timeline(new KeyFrame(ABILITY_COOLDOWN, handleCooldown));
@@ -70,7 +71,6 @@ public abstract class Player extends Character{
         DASH_COOLDOWN.setCycleCount(1);
         SWING = new Swing(this);
         DASH = new Dash(this);
-        //map.getChildren().add(map.getChildren().size()-1, SWING);
     }
 
     @Override

@@ -4,6 +4,9 @@ import game.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Super klasse for alle celler.
+ */
 public abstract class Cell extends ImageView {
     private final Point point;
     protected Cell(Point point, Image image){
