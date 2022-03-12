@@ -2,6 +2,7 @@ package character;
 
 import abilities.Dash;
 import abilities.Swing;
+import cell.Cell;
 import cell.Point;
 import game.Settings;
 import input.InputController;
@@ -28,6 +29,9 @@ public abstract class Player extends Character{
     private Timeline DASH_COOLDOWN;
     private Swing SWING;
     private Dash DASH;
+
+    public int playerNumber;
+
 
     protected KeyCode[] keyBindings = {
             KeyCode.UP,
@@ -65,17 +69,34 @@ public abstract class Player extends Character{
         //map.getChildren().add(map.getChildren().size()-1, SWING);
     }
 
+    public int getHP(){
+        return hitPoints;
+    }
+
+    public void swingHit(){
+        hitPoints-=Settings.SWING_DAMAGE;
+        checkHP();
+        Map.playerStatus.updateHP(playerNumber, hitPoints);
+    }
+
+    public void checkHP(){
+        if(hitPoints<=0){
+            hitPoints=0;
+            lives--;
+            hitPoints = START_HP;
+        }
+        if(lives<1){
+            hitPoints=0;
+            die();
+        }
+    }
+
+    public void die(){
+        map.endGame(playerNumber);
+    }
+
     @Override
     protected void update() {
-        if(Settings.DEBUG){
-            if(InputController.isPressed(keyBindings[0])){
-                //System.out.println("UP "+keyBindings[0]);
-
-            }
-            if(getDirection()!=0){
-                System.out.println(getDirection());
-            }
-        }
         direction(getDirection());
         move(getDirection());
         attack(getAttack());
@@ -151,6 +172,25 @@ public abstract class Player extends Character{
             deltaX*=2;
             deltaY*=2;
             setViewport(EntityOptions.VIEWS[0]);
+        }
+
+        for (Cell c : map.walls){
+            boolean isColliding = c.getLayoutBounds().intersects(getLayoutBounds());
+            if(isColliding){
+                if(deltaX!=0){
+                    if ((deltaX<0 && c.getX()<getX()) || (deltaX>0 && c.getX()>getX()) ){ // X
+                        deltaX=0;
+                        //deltaX=deltaX<0?Settings.BASE_SCALE:-Settings.BASE_SCALE;
+                    }
+                }
+                if(deltaY!=0){
+                    if ((deltaY<0 && c.getY()<getY()) || (deltaY>0 && c.getY()>getY()) ){ // Y
+                        deltaY=0;
+                        //deltaY=deltaY<0?Settings.BASE_SCALE:-Settings.BASE_SCALE;
+                    }
+                }
+            }
+
         }
 
         setX(getX()+deltaX);

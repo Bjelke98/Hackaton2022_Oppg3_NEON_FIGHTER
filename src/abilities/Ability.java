@@ -22,7 +22,7 @@ public abstract class Ability extends ImageView {
 
     private Timeline ANIMATION;
     protected Player player;
-
+    protected Player enemy;
     protected int animationState = 0;
     protected int animationDirection = 0;
 
@@ -56,8 +56,8 @@ public abstract class Ability extends ImageView {
             update();
         }
         if(animationState>=14){
-            setX(-Settings.CHARACTER_SIZE);
             lastTick();
+            setX(-Settings.CHARACTER_SIZE);
         }
     }
 
@@ -74,6 +74,15 @@ public abstract class Ability extends ImageView {
         animationDirection = side;
         ANIMATION.play();
     }
+
+    public void setEnemy(Player enemy) {
+        this.enemy = enemy;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     public Animation.Status getStatus(){
         return ANIMATION.getStatus();
     }

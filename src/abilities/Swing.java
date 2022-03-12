@@ -33,6 +33,8 @@ public class Swing extends Ability{
 
     @Override
     protected void lastTick() {
-
+        if(getBoundsInLocal().intersects(enemy.getBoundsInLocal())){
+            enemy.swingHit();
+        }
     }
 }

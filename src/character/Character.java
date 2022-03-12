@@ -16,11 +16,13 @@ public abstract class Character extends ImageView {
 
     private static final Duration MOVEMENT_INTERVAL = Duration.millis(20*Settings.SPEED_MULTIPLIER);
 
+    protected static final int START_HP = 100;
+
     private final Timeline MOVEMENT;
 
     protected final Map map;
 
-    protected int hitPoints = 100;
+    protected int hitPoints = START_HP;
 
     protected int lives = 1;
 

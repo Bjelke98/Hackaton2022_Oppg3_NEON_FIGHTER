@@ -18,6 +18,23 @@ public abstract class Cell extends ImageView {
         }
     }
 
+    public double getRandomRotate(){
+        return switch (random4()){
+            case 0-> 0;
+            case 1-> 90;
+            case 2-> 180;
+            case 3-> 270;
+            default -> throw new IllegalStateException("Ulåvelig rettning");
+        };
+    }
+    public int random4(){
+        return (int)(Math.random()*3);
+    }
+
+    public boolean isCollidable(){
+        return false;
+    }
+
     @Override
     public String toString() {
         return point.toString();
